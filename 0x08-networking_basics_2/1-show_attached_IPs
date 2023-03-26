@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
-# Displays all active IPv4 IPs on the machine.
 
-ifconfig | grep -Eo "inet (addr:)?([0-9]*\.){3}[0-9]*" | cut -b 11-
+# get all IPv4 addresses assigned to the machine
+ips=$(ifconfig | grep "inet " | awk '{print $2}')
+
+# loop through the IPs and check if they are active
+for ip in $ips; do
+  if ping -c 1 $ip &> /dev/null; then
+    echo "Active IP: $ip"
+  fi
+done
+
