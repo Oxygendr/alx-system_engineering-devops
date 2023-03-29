@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
+# Displays all acive IPv4 addresses on the machine.
 
-# get all IPv4 addresses assigned to the machine
-ips=$(ifconfig | grep "inet " | awk '{print $2}')
+# a different way using ifconfig but now ip is a new command and ifconfig can be missing in some os
+#ifconfig | grep -Eo "inet (addr:)?([0-9]*\.){3}[0-9]*" | awk '{print $2}'
 
-# loop through the IPs and check if they are active
-for ip in $ips; do
-  if ping -c 1 $ip &> /dev/null; then
-    echo "Active IP: $ip"
-  fi
-done
-
+ip -4 -o addr show | awk '{print $4}' | cut -d "/" -f 1
